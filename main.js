@@ -24,12 +24,12 @@
         }
         board.startTime = !board.startTime ? Date.now() : board.startTime;
         let num = board.seq[n - 1];
-        board.tiles[n - 1].classList.add('open');
+        board.tiles[n - 1].firstChild.classList.add('open');
         setTimeout(() => board.tiles[n - 1].firstChild.textContent = num, 250);
         if (num === 0) {
             [...board.tiles].forEach(i => {
-                i.classList.add('open');
-                i.classList.add('missed');
+                i.firstChild.classList.add('open');
+                i.firstChild.classList.add('missed');
                 board.blink('#F64848');
             });
             setTimeout(board.reset, 500);
@@ -38,14 +38,14 @@
         } else {
             let openedCell = board.openStack.pop();
             if (openedCell.firstChild.textContent == num) {
-                openedCell.classList.add('found');
-                board.tiles[n - 1].classList.add('found');
+                openedCell.firstChild.classList.add('found');
+                board.tiles[n - 1].firstChild.classList.add('found');
                 board.blink('#B7F0AD');
                 board.cellsFound.push(openedCell, board.tiles[n - 1]);
                 board.cellsFound.length === board.length - 1 && board.end();
             } else {
-                openedCell.classList.add('missed');
-                board.tiles[n - 1].classList.add('missed');
+                openedCell.firstChild.classList.add('missed');
+                board.tiles[n - 1].firstChild.classList.add('missed');
                 board.blink('#F64848');
                 setTimeout(() => {
                     board.closeCell(n);
@@ -55,9 +55,9 @@
         }
     };
     board.closeCell = (n) => {
-        board.tiles[n - 1].classList.remove('open');
-        board.tiles[n - 1].classList.remove('missed');
-        board.tiles[n - 1].classList.remove('found');
+        board.tiles[n - 1].firstChild.classList.remove('open');
+        board.tiles[n - 1].firstChild.classList.remove('missed');
+        board.tiles[n - 1].firstChild.classList.remove('found');
         board.tiles[n - 1].firstChild.textContent = '';
     };
     board.reset = () => {
@@ -77,8 +77,8 @@
     board.end = () => {
         let zero = board.tiles[board.seq.indexOf(0)];
         setTimeout(() => zero.firstChild.textContent = 0, 250);
-        zero.classList.add('open');
-        zero.classList.add('found');
+        zero.firstChild.classList.add('open');
+        zero.firstChild.classList.add('found');
         const finishTime = ((Date.now() - board.startTime) / 1000).toFixed(2);
         board.bestScore = Number(finishTime) < Number(board.bestScore) ? finishTime : board.bestScore;
         board.message.innerHTML = `Congrats! You did it in ${finishTime} seconds! <br />${finishTime == board.bestScore ? 'This is your best score so far!' : `Your best score so far is ${board.bestScore} seconds.`}<br /><a href="#" id="restartLink">Click here to play again</a>`;
@@ -90,9 +90,10 @@
 
     document.addEventListener('click', (e) => {
         if (e.target.id === 'restartLink') {
+            e.preventDefault();
             board.restart();
         } else {
-            ([...e.target.classList].includes('cell') && ![...e.target.classList].includes('open') && ![...e.target.classList].includes('cell-number')) && board.openCell(e.target.id.match(/\d+/)[0]); 
+            ([...e.target.classList].includes('cell-number') && ![...e.target.classList].includes('open')) && board.openCell(e.target.parentElement.id.match(/\d+/)[0]); 
         }
     });
     document.addEventListener('keydown', (e) => {

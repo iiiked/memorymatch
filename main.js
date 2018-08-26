@@ -88,7 +88,7 @@
         setTimeout(() => document.body.style.background = '#FCBF49', 250);
     };
 
-    document.addEventListener('click touchstart', (e) => {
+    document.addEventListener('click', (e) => {
         if (e.target.id === 'restartLink') {
             board.restart();
         } else {

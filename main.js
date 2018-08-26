@@ -98,7 +98,7 @@
     });
     document.addEventListener('keydown', (e) => {
         if(e.key > 0 && e.key < 10) {
-            board.openCell(e.key);
+            !board.cellsFound.length === board.length - 1 && board.openCell(e.key);
         }
     });
 })();
